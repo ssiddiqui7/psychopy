@@ -864,6 +864,7 @@ class LoopInitiator:
         return 'LoopInitiator'
     def writeExperimentEndCode(self,buff):#not needed
         pass
+
 class LoopTerminator:
     """A simple class for inserting into the flow.
     This is created automatically when the loop is created"""
@@ -880,8 +881,26 @@ class LoopTerminator:
         return 'LoopTerminator'
     def writeExperimentEndCode(self,buff):#not needed
         pass
+
+class ForkInitiator:
+    """A simple class for inserting into the flow.
+    This is created automatically when the loop is created"""
+    def __init__(self, fork, opt1, opt2):
+        self.opt1 = opt1 # first fork
+        self.opt2 = opt2 # second fork
+        self.exp=fork.exp 
+        fork.initiator=self
+    def writeInitCode(self,buff):
+        self.fork.writeInitCode(buff)
+    def writeMainCode(self,buff):
+        self.fork.writeForkStartCode(buff)
+    def getType(self):
+        return 'ForkInitiator'
+    def writeExperimentEndCode(self,buff):#not needed
+        pass
+
 class Flow(list):
-    """The flow of the experiment is a list of L{Routine}s, L{LoopInitiator}s and
+    """The flow of the experiment is a list of L{Routine}s, L{ForkInitiator}s, L{LoopInitiator}s and
     L{LoopTerminator}s, that will define the order in which events occur
     """
     def __init__(self, exp):
@@ -897,17 +916,20 @@ class Flow(list):
         self.insert(int(endPos), LoopTerminator(loop))
         self.insert(int(startPos), LoopInitiator(loop))
         self.exp.requirePsychopyLibs(['data'])#needed for TrialHandlers etc
+    def addFork(self, fork, pos):
+        self.insert(int(pos), fork)
     def addRoutine(self, newRoutine, pos):
         """Adds the routine to the Flow list"""
         self.insert(int(pos), newRoutine)
     def removeComponent(self,component,id=None):
-        """Removes a Loop, LoopTerminator or Routine from the flow
+        """Removes a Fork, Loop, LoopTerminator, or Routine from the flow
 
         For a Loop (or initiator or terminator) to be deleted we can simply remove
         the object using normal list syntax. For a Routine there may be more than
         one instance in the Flow, so either choose which one by specifying the id, or all
         instances will be removed (suitable if the Routine has been deleted).
         """
+        #TODO: remove fork... this will be complicated, since it is not a separate componenet type
         if component.getType() in ['LoopInitiator', 'LoopTerminator']:
             component=component.loop#and then continue to do the next
         if component.getType() in ['StairHandler', 'TrialHandler', 'MultiStairHandler']:

@@ -588,6 +588,21 @@ class FlowPanel(wx.ScrolledWindow):
             self.frame.addToUndoStack("ADD Loop `%s` to Flow" %handler.params['name'].val)
         self.clearMode()
         self.draw()
+
+    def setForkPoint(self, evt=None):
+        """Someone pushed the insert loop button.
+        Fetch the dialog
+        """
+        if self.mode == 'routine':
+            self.clearMode()
+        elif self.mode == 'forkPoint': # clicked again, label is "Cancel..."
+            self.clearMode()
+            return
+        self.mode='forkPoint'
+        x = self.getNearestGapPoint(0)
+        self.drawEntryPoints([x])
+    
+
     def dumpNamespace(self, evt=None):
         nsu = self.frame.exp.namespace.user
         if len(nsu) == 0:
@@ -834,10 +849,17 @@ class FlowPanel(wx.ScrolledWindow):
         font = self.GetFont()
 
         #draw the main time line
+        # if not splitFlow: # IR:
         self.linePos = (2.5*self.dpi,0.5*self.dpi) #x,y of start
         gap = self.dpi / (6, 4, 2) [self.appData['flowSize']]
         dLoopToBaseLine = (15, 25, 43) [self.appData['flowSize']]
         dBetweenLoops = (20, 24, 30) [self.appData['flowSize']]
+        # else:
+        #     self.linePos = (2.5*self.dpi,0.5*self.dpi) #x,y of start
+        #     self.splitPoint = evt.getPosition()
+        #     gap = (self.dpi / (6, 4, 2) [self.appData['flowSize']])/2
+        #     dLoopToBaseLine = (15, 25, 43) [self.appData['flowSize']]
+        #     dBetweenLoops = (20, 24, 30) [self.appData['flowSize']]
 
         #guess virtual size; nRoutines wide by nLoops high
         #make bigger than needed and shrink later
