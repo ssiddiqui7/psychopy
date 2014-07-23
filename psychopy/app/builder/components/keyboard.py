@@ -229,6 +229,9 @@ class KeyboardComponent(BaseComponent):
             if self.params['storeCorrect'].val==True:
                 buff.writeIndented("%s.addData('%s.corr', %s.corr)\n" \
                                    %(currLoop.params['name'], name, name))
+            if self.params['splitFlow'].val==True:
+                buff.writeIndented("%s.addData('%s.split', %s.split)\n" \
+                                   %(currLoop.params['name'], name, name))
             #only add an RT if we had a response
             buff.writeIndented("if %(name)s.keys != None:  # we had a response\n" %(self.params))
             buff.writeIndented("    %s.addData('%s.rt', %s.rt)\n" \
