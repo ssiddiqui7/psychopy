@@ -7,7 +7,7 @@ from components import getInitVals, getComponents, getAllComponents
 import psychopy
 from psychopy import data, __version__, logging
 from psychopy.constants import FOREVER
-from lxml import etree
+import xml.etree.cElementTree as etree
 import re, os
 import locale
 
@@ -884,10 +884,10 @@ class LoopTerminator:
 
 class ForkInitiator:
     """A simple class for inserting into the flow.
-    This is created automatically when the loop is created"""
+    Should be created when splitFlow option checked"""
     def __init__(self, fork, opt1, opt2):
-        self.opt1 = opt1 # first fork
-        self.opt2 = opt2 # second fork
+        self.opt1 = opt1 # first fork flow
+        self.opt2 = opt2 # second fork flow
         self.exp=fork.exp 
         fork.initiator=self
     def writeInitCode(self,buff):

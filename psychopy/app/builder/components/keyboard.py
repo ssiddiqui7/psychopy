@@ -181,7 +181,7 @@ class KeyboardComponent(BaseComponent):
             buff.writeIndented("else:\n")
             buff.writeIndented("    %(name)s.corr = 0\n" %(self.params))
 
-        if splitF==True:
+        if split==True:
             buff.writeIndented("# was this a flow-splitting key? - automatically stored\n")
             buff.writeIndented("if (%(name)s.keys == str(%(input1)s)) or (%(name)s.keys == %(input1)s):\n" %(self.params))
             buff.writeIndented("    %(name)s.split = 1\n" %(self.params))
@@ -228,6 +228,9 @@ class KeyboardComponent(BaseComponent):
                %(currLoop.params['name'],name,name))
             if self.params['storeCorrect'].val==True:
                 buff.writeIndented("%s.addData('%s.corr', %s.corr)\n" \
+                                   %(currLoop.params['name'], name, name))
+            if self.params['splitFlow'].val==True:
+                buff.writeIndented("%s.addData('%s.split', %s.split)\n" \
                                    %(currLoop.params['name'], name, name))
             #only add an RT if we had a response
             buff.writeIndented("if %(name)s.keys != None:  # we had a response\n" %(self.params))
