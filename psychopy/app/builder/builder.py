@@ -425,6 +425,7 @@ class FlowPanel(wx.ScrolledWindow):
         #self.btnInsertLoop = wx.Button(self,-1,'Insert Loop', pos=(10,30))
         self.btnInsertRoutine = platebtn.PlateButton(self,-1,'Insert Routine ', pos=(10,10))
         self.btnInsertLoop = platebtn.PlateButton(self,-1,'Insert Loop     ', pos=(10,30)) #spaces give size for CANCEL
+        self.btnInsertFork = platebtn.PlateButon(self, -1, 'Insert Fork', ps=(10,50))
 
         self.labelTextGray = {'normal': wx.Colour(150,150,150, 20),'hlight':wx.Colour(150,150,150, 20)}
         self.labelTextRed = {'normal': wx.Colour(250,10,10, 250),'hlight':wx.Colour(250,10,10, 250)}
@@ -443,6 +444,7 @@ class FlowPanel(wx.ScrolledWindow):
         self.Bind(wx.EVT_MOUSE_EVENTS, self.OnMouse)
         self.Bind(wx.EVT_BUTTON, self.onInsertRoutine,self.btnInsertRoutine)
         self.Bind(wx.EVT_BUTTON, self.setLoopPoint1,self.btnInsertLoop)
+        self.Bind(wx.EVT_BUTTON, self.insertFork, self.btnInsertFork)
         if self.app.prefs.app['debugMode']:
             self.Bind(wx.EVT_BUTTON, self.dumpNamespace, self.btnViewNamespace)
         self.Bind(wx.EVT_PAINT, self.OnPaint)
@@ -471,6 +473,8 @@ class FlowPanel(wx.ScrolledWindow):
         self.btnInsertRoutine.SetLabelColor(**self.labelTextBlack)
         self.btnInsertLoop.SetLabel('Insert Loop')
         self.btnInsertLoop.SetLabelColor(**self.labelTextBlack)
+        self.btnInsertFork.setLabel('Insert Fork')
+        self.btnInsertFork.setLabelColr(**self.labelTextBlack)
     def ConvertEventCoords(self, event):
         xView, yView = self.GetViewStart()
         xDelta, yDelta = self.GetScrollPixelsPerUnit()
