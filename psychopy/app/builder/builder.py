@@ -425,7 +425,7 @@ class FlowPanel(wx.ScrolledWindow):
         #self.btnInsertLoop = wx.Button(self,-1,'Insert Loop', pos=(10,30))
         self.btnInsertRoutine = platebtn.PlateButton(self,-1,'Insert Routine ', pos=(10,10))
         self.btnInsertLoop = platebtn.PlateButton(self,-1,'Insert Loop     ', pos=(10,30)) #spaces give size for CANCEL
-        self.btnInsertFork = platebtn.PlateButon(self, -1, 'Insert Fork', ps=(10,50))
+        self.btnInsertFork = platebtn.PlateButton(self, -1, 'Insert Fork', ps=(10,50))
 
         self.labelTextGray = {'normal': wx.Colour(150,150,150, 20),'hlight':wx.Colour(150,150,150, 20)}
         self.labelTextRed = {'normal': wx.Colour(250,10,10, 250),'hlight':wx.Colour(250,10,10, 250)}
