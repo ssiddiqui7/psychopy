@@ -604,10 +604,13 @@ class FlowPanel(wx.ScrolledWindow):
         elif self.mode == 'forkPoint': # clicked again, label is "Cancel..."
             self.clearMode()
             return
+        self.btnInsertFork.SetLabel('CANCEL insert')
+        self.btnInsertFork.SetLabelColor(**self.labelTextRed)
         self.mode='forkPoint'
         x = self.getNearestGapPoint(0)
         self.drawEntryPoints([x])
-    
+    #def insertFork(self, evt=None):
+        
 
     def dumpNamespace(self, evt=None):
         nsu = self.frame.exp.namespace.user
@@ -3095,6 +3098,10 @@ class DlgComponentProperties(_BaseParamsDlg):
             self.onStoreCorrectChange(event=None)#do this just to set the initial values to be
             self.Bind(wx.EVT_CHECKBOX, self.onStoreCorrectChange, self.paramCtrls['storeCorrect'].valueCtrl)
 
+        if 'splitFlow' in self.params:
+            self.onSplitFlowChange(event=None)#do this just to set the initial values to be
+            self.Bind(wx.EVT_CHECKBOX, self.onSplitFlowChange, self.paramCtrls['splitFlow'].valueCtrl)
+
         #for all components
         self.show()
         if self.OK:
@@ -3111,6 +3118,26 @@ class DlgComponentProperties(_BaseParamsDlg):
         else:
             self.paramCtrls['correctAns'].valueCtrl.Hide()
             self.paramCtrls['correctAns'].nameCtrl.Hide()
+            #self.paramCtrls['correctAns'].typeCtrl.Hide()
+            #self.paramCtrls['correctAns'].updateCtrl.Hide()
+        self.mainSizer.Layout()
+        self.Fit()
+        self.Refresh()
+
+    def onSplitFlowChange(self,event=None):
+        """split flow has been checked/unchecked. Show or hide the 'input1'/'input2' fields accordingly"""
+        if self.paramCtrls['splitFlow'].valueCtrl.GetValue():
+            self.paramCtrls['input1'].valueCtrl.Show()
+            self.paramCtrls['input1'].nameCtrl.Show()
+            self.paramCtrls['input2'].valueCtrl.Show()
+            self.paramCtrls['input2'].nameCtrl.Show()
+            #self.paramCtrls['correctAns'].typeCtrl.Show()
+            #self.paramCtrls['correctAns'].updateCtrl.Show()
+        else:
+            self.paramCtrls['input1'].valueCtrl.Hide()
+            self.paramCtrls['input1'].nameCtrl.Hide()
+            self.paramCtrls['input2'].valueCtrl.Hide()
+            self.paramCtrls['input2'].nameCtrl.Hide()
             #self.paramCtrls['correctAns'].typeCtrl.Hide()
             #self.paramCtrls['correctAns'].updateCtrl.Hide()
         self.mainSizer.Layout()
