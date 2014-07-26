@@ -425,7 +425,7 @@ class FlowPanel(wx.ScrolledWindow):
         #self.btnInsertLoop = wx.Button(self,-1,'Insert Loop', pos=(10,30))
         self.btnInsertRoutine = platebtn.PlateButton(self,-1,'Insert Routine ', pos=(10,10))
         self.btnInsertLoop = platebtn.PlateButton(self,-1,'Insert Loop     ', pos=(10,30)) #spaces give size for CANCEL
-        self.btnInsertFork = platebtn.PlateButon(self, -1, 'Insert Fork', ps=(10,50))
+        self.btnInsertFork = platebtn.PlateButton(self, -1, 'Insert Fork', pos=(10,50))
 
         self.labelTextGray = {'normal': wx.Colour(150,150,150, 20),'hlight':wx.Colour(150,150,150, 20)}
         self.labelTextRed = {'normal': wx.Colour(250,10,10, 250),'hlight':wx.Colour(250,10,10, 250)}
@@ -444,7 +444,7 @@ class FlowPanel(wx.ScrolledWindow):
         self.Bind(wx.EVT_MOUSE_EVENTS, self.OnMouse)
         self.Bind(wx.EVT_BUTTON, self.onInsertRoutine,self.btnInsertRoutine)
         self.Bind(wx.EVT_BUTTON, self.setLoopPoint1,self.btnInsertLoop)
-        self.Bind(wx.EVT_BUTTON, self.insertFork, self.btnInsertFork)
+        self.Bind(wx.EVT_BUTTON, self.setForkPoint, self.btnInsertFork)
         if self.app.prefs.app['debugMode']:
             self.Bind(wx.EVT_BUTTON, self.dumpNamespace, self.btnViewNamespace)
         self.Bind(wx.EVT_PAINT, self.OnPaint)
@@ -473,8 +473,8 @@ class FlowPanel(wx.ScrolledWindow):
         self.btnInsertRoutine.SetLabelColor(**self.labelTextBlack)
         self.btnInsertLoop.SetLabel('Insert Loop')
         self.btnInsertLoop.SetLabelColor(**self.labelTextBlack)
-        self.btnInsertFork.setLabel('Insert Fork')
-        self.btnInsertFork.setLabelColr(**self.labelTextBlack)
+        self.btnInsertFork.SetLabel('Insert Fork')
+        self.btnInsertFork.SetLabelColor(**self.labelTextBlack)
     def ConvertEventCoords(self, event):
         xView, yView = self.GetViewStart()
         xDelta, yDelta = self.GetScrollPixelsPerUnit()
@@ -546,9 +546,6 @@ class FlowPanel(wx.ScrolledWindow):
         """
         self.frame.exp.flow.addRoutine(self.frame.exp.routines[self.insertingRoutine], ii)
         self.frame.addToUndoStack("ADD Routine `%s`" %self.frame.exp.routines[self.insertingRoutine].name)
-
-        #TODO: if routine has a keyresponse component and splitRoutine==true, then split the flow at entry point <-----------------------
-
 
         #reset flow drawing (remove entry point)
         self.clearMode()
@@ -728,6 +725,12 @@ class FlowPanel(wx.ScrolledWindow):
             else:#move spot if needed
                 point = self.getNearestGapPoint(mouseX=x, exclude=self.gapsExcluded)
                 self.drawEntryPoints([self.entryPointPosList[0], point])
+        elif self.mode=='forkPoint':
+            if event.LeftDown():
+                self.insertFork(ii=self.gapMidPoints.index(self.entryPointPosList[0]))
+            else:#move spot if needed
+                point = self.getNearestGapPoint(mouseX=x)
+                self.drawEntryPoints([point])
     def getNearestGapPoint(self, mouseX, exclude=[]):
         """Get gap that is nearest to a particular mouse location
         """
@@ -858,19 +861,11 @@ class FlowPanel(wx.ScrolledWindow):
         font = self.GetFont()
 
         #draw the main time line
-        if not self.splitFlow: # IR:
-            self.linePos = (2.5*self.dpi,0.5*self.dpi) #x,y of start
-            gap = self.dpi / (6, 4, 2) [self.appData['flowSize']]
-            dLoopToBaseLine = (15, 25, 43) [self.appData['flowSize']]
-            dBetweenLoops = (20, 24, 30) [self.appData['flowSize']]
-        else:
-            self.linePos = (2.5*self.dpi,0.5*self.dpi) #x,y of start
-            
-            self.linePos1 = (evt.getPosition()[0], 0.25*self.dpi)
-            self.linePos2 = (evt.getPosition()[0], -0.25*self.dpi)
-            gap = (self.dpi / (6, 4, 2) [self.appData['flowSize']])/2
-            dLoopToBaseLine = (15/2, 25/2, 43/2) [self.appData['flowSize']]
-            dBetweenLoops = (20, 24, 30) [self.appData['flowSize']]
+        self.linePos = (2.5*self.dpi,0.5*self.dpi) #x,y of start
+        gap = self.dpi / (6, 4, 2) [self.appData['flowSize']]
+        dLoopToBaseLine = (15, 25, 43) [self.appData['flowSize']]
+        dBetweenLoops = (20, 24, 30) [self.appData['flowSize']]
+
 
         #guess virtual size; nRoutines wide by nLoops high
         #make bigger than needed and shrink later
@@ -904,10 +899,6 @@ class FlowPanel(wx.ScrolledWindow):
             elif entry.getType()=='Routine':
                 # just get currX based on text size, don't draw anything yet:
                 currX = self.drawFlowRoutine(pdc,entry, id=ii,pos=[currX,self.linePos[1]-10], draw=False)
-                if entry.splitFlow: #IR TODO: Make sure that it can be accessed like this <-------------------------------------------------
-                    pdc.DrawLine(x1=self.linePos[0]-gap, y1=self.linePos[1],x2=self.linePos[0],y2=self.linePos[1])
-                    pdc.DrawLine(x1=self.linePos1[0]-gap, y1=self.linePos1[1],x2=self.linePos1[0],y2=self.linePos1[1])
-                    pdc.DrawLine(x1=self.linePos2[0]-gap, y1=self.linePos2[1],x2=self.linePos2[0],y2=self.linePos2[1])
             self.gapMidPoints.append(currX+gap/2)
             self.gapNestLevels.append(nestLevel)
             pdc.SetId(lineId)
