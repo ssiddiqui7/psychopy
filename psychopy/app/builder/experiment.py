@@ -933,8 +933,9 @@ class Flow(list):
         self.insert(int(endPos), LoopTerminator(loop))
         self.insert(int(startPos), LoopInitiator(loop))
         self.exp.requirePsychopyLibs(['data'])#needed for TrialHandlers etc
-    def addFork(self, routine1, routine2, pos):
-        if self.exp. einsert(int(pos), fork)
+    def addFork(self, routine1, routine2, pos): #technically, these routines are not added as part of the flow, but to the fork itself!
+        self.insert(int(pos), routine1)
+        self.insert(int(pos), routine2)
     def addRoutine(self, newRoutine, pos):
         """Adds the routine to the Flow list"""
         self.insert(int(pos), newRoutine)
