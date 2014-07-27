@@ -613,6 +613,11 @@ class FlowPanel(wx.ScrolledWindow):
         self.mode='forkPoint'
         x = self.getNearestGapPoint(0)
         self.drawEntryPoints([x])
+    
+    #TODO: create and bring up fork dialog to choose two routines
+    #def onInsertFork(self, evt=None):
+        
+    #TODO: model on insertRoutine
     #def insertFork(self, evt=None):
         
 
