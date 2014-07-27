@@ -1078,17 +1078,18 @@ class Flow(list):
             entry.writeMainCode(script)
 ##        for entry in self:
 ##            if entry.getType() = ForkInitiator:
-##		write(if event.getKeys = input1:)
+##		script.writeIndented(if event.getKeys() = params['input1'].val:)
 ##		write(	entry.routine1.--writemaincode--)
-##		write(if event.getKeys = input2:)
+##		write(if event.getKeys() = params[input2'].val:)
 ##		write(	entry.routine2.--writemaincode--)
+##                write(else
 ##            else:	
 ##		self._currentRoutine=entry
 ##            	entry.writeMainCode(script)
-        #tear-down code (very few components need this)
-        for entry in self:
-            self._currentRoutine=entry
-            entry.writeExperimentEndCode(script)
+##        #tear-down code (very few components need this)
+##        for entry in self:
+##            self._currentRoutine=entry
+##            entry.writeExperimentEndCode(script)
 
 class Routine(list):
     """
