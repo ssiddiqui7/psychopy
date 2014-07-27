@@ -882,18 +882,35 @@ class LoopTerminator:
     def writeExperimentEndCode(self,buff):#not needed
         pass
 
+##class ForkInitiator:
+##    """A simple class for inserting into the flow.
+##    Should be created when splitFlow option checked"""
+##    def __init__(self, fork, opt1, opt2):
+##        self.opt1 = opt1 # first fork flow
+##        self.opt2 = opt2 # second fork flow
+##        self.exp=fork.exp 
+##        fork.initiator=self
+##    def writeInitCode(self,buff):
+##        self.fork.writeInitCode(buff)
+##    def writeMainCode(self,buff):
+##        self.fork.writeForkStartCode(buff)
+##    def getType(self):
+##        return 'ForkInitiator'
+##    def writeExperimentEndCode(self,buff):#not needed
+##        pass
+
 class ForkInitiator:
     """A simple class for inserting into the flow.
-    Should be created when splitFlow option checked"""
-    def __init__(self, fork, opt1, opt2):
-        self.opt1 = opt1 # first fork flow
-        self.opt2 = opt2 # second fork flow
+    Should be created when fork option clicked"""
+    def __init__(self, routine1, routine2):
+        self.routine1 = routine1 # first fork flow
+        self.routine2 = routine2 # second fork flow
         self.exp=fork.exp 
         fork.initiator=self
     def writeInitCode(self,buff):
-        self.fork.writeInitCode(buff)
+        pass
     def writeMainCode(self,buff):
-        self.fork.writeForkStartCode(buff)
+        pass #this will never be called!
     def getType(self):
         return 'ForkInitiator'
     def writeExperimentEndCode(self,buff):#not needed
@@ -916,8 +933,8 @@ class Flow(list):
         self.insert(int(endPos), LoopTerminator(loop))
         self.insert(int(startPos), LoopInitiator(loop))
         self.exp.requirePsychopyLibs(['data'])#needed for TrialHandlers etc
-    def addFork(self, fork, pos):
-        self.insert(int(pos), fork)
+    def addFork(self, routine1, routine2, pos): #technically, these routines are not added as part of the flow, but to the fork itself!
+        self.insert(int(pos), ForkInitiator(routine1, routine2))
     def addRoutine(self, newRoutine, pos):
         """Adds the routine to the Flow list"""
         self.insert(int(pos), newRoutine)
@@ -1059,10 +1076,20 @@ class Flow(list):
         for entry in self:
             self._currentRoutine=entry
             entry.writeMainCode(script)
-        #tear-down code (very few components need this)
-        for entry in self:
-            self._currentRoutine=entry
-            entry.writeExperimentEndCode(script)
+##        for entry in self:
+##            if entry.getType() = ForkInitiator:
+##		script.writeIndented(if event.getKeys() = params['input1'].val:)
+##		write(	entry.routine1.--writemaincode--)
+##		write(if event.getKeys() = params[input2'].val:)
+##		write(	entry.routine2.--writemaincode--)
+##                write(else
+##            else:	
+##		self._currentRoutine=entry
+##            	entry.writeMainCode(script)
+##        #tear-down code (very few components need this)
+##        for entry in self:
+##            self._currentRoutine=entry
+##            entry.writeExperimentEndCode(script)
 
 class Routine(list):
     """
