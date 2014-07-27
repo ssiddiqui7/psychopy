@@ -425,11 +425,7 @@ class FlowPanel(wx.ScrolledWindow):
         #self.btnInsertLoop = wx.Button(self,-1,'Insert Loop', pos=(10,30))
         self.btnInsertRoutine = platebtn.PlateButton(self,-1,'Insert Routine ', pos=(10,10))
         self.btnInsertLoop = platebtn.PlateButton(self,-1,'Insert Loop     ', pos=(10,30)) #spaces give size for CANCEL
-<<<<<<< HEAD
-        self.btnInsertFork = platebtn.PlateButton(self, -1, 'Insert Fork', ps=(10,50))
-=======
         self.btnInsertFork = platebtn.PlateButton(self, -1, 'Insert Fork', pos=(10,50))
->>>>>>> 02f5f89cdad028069c72eb82813f466784ac1295
 
         self.labelTextGray = {'normal': wx.Colour(150,150,150, 20),'hlight':wx.Colour(150,150,150, 20)}
         self.labelTextRed = {'normal': wx.Colour(250,10,10, 250),'hlight':wx.Colour(250,10,10, 250)}
@@ -601,7 +597,6 @@ class FlowPanel(wx.ScrolledWindow):
     def setForkPoint(self, evt=None):
         """Someone pushed the insert fork button.
         Fetch the dialog
-        This will be useful if forking is ever allowed separately from the keyresponse component
         """
         if self.mode == 'routine':
             self.clearMode()
@@ -618,7 +613,11 @@ class FlowPanel(wx.ScrolledWindow):
     #def onInsertFork(self, evt=None):
         
     #TODO: model on insertRoutine
-    #def insertFork(self, evt=None):
+##    def insertFork(self, evt=None):
+##        self.frame.exp.flow.addFork(self.frame.exp.routines[self.insertingRoutine], ii)
+##        self.frame.addToUndoStack("ADD Routine `%s`" %self.frame.exp.routines[self.insertingRoutine].name)
+##        #reset flow drawing (remove entry point)
+##        self.clearMode()
         
 
     def dumpNamespace(self, evt=None):
