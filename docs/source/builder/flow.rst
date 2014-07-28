@@ -22,6 +22,8 @@ It is usually best to use trial information that is contained in an external fil
 
 As the column names from the input file are used in this way they must have legal variable names i.e. they must be unique, have no punctuation or spaces (underscores are ok) and must not start with a digit.
 
+
+
 .. _trialTypes:
 
 Method of Constants
@@ -71,3 +73,17 @@ Reducing namespace clutter (advanced)
 The downside of the above approach is that the names of trial parameters must be different between every loop, as well as not matching any of the predefined names in python, numpy and PsychoPy. For example, the stimulus called `movie` cannot use a parameter also called `movie` (so you need to call it `movieName`). An alternative method can be used without these restrictions. If you set the Builder preference `unclutteredNamespace` to True you can then access the variables by referring to parameter as an attribute of the singular name of the loop prepended with `this`. For example, if you have a loop called `trials` which has the above file attached to it, then you can access the stimulus ori with `$thisTrial.ori`. If you have a loop called `blocks` you could use `$thisBlock.corrAns`.
 
 Now, although the name of the loop must still be valid and unique, the names of the parameters of the file do not have the same requirements (they must still not contain spaces or punctuation characters).
+
+.. _forks:
+
+Forks
+~~~~~~~~~~~~~~~
+
+Forks allow for different flows to be formed depending on participant responses. Each branch can have independent :ref:'routines' and :term:'loops'. The fork does not require a name.
+
+There are two ways to create a fork. There is access through the KeyResponse Component or through the 'Add Fork' button. In the KeyResponse Component dialog box, check the mark next to 'Insert Fork' and enter the response corresponding with the first branch under 'input 1' and the response corresponding with the second branch under 'input 2'. Alternatively, click on 'Add Fork' and follow the same steps. Continue adding routines to the appropriate flow branch as usual.
+
+
+
+
+
