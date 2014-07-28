@@ -877,7 +877,21 @@ class FlowPanel(wx.ScrolledWindow):
         dLoopToBaseLine = (15, 25, 43) [self.appData['flowSize']]
         dBetweenLoops = (20, 24, 30) [self.appData['flowSize']]
 
-
+## #draw the main time line --Irina's code, we could not run
+##        if not self.splitFlow: # IR:
+##            self.linePos = (2.5*self.dpi,0.5*self.dpi) #x,y of start
+##            gap = self.dpi / (6, 4, 2) [self.appData['flowSize']]
+##            dLoopToBaseLine = (15, 25, 43) [self.appData['flowSize']]
+##            dBetweenLoops = (20, 24, 30) [self.appData['flowSize']]
+##        else:
+##            self.linePos = (2.5*self.dpi,0.5*self.dpi) #x,y of start
+##            
+##            self.linePos1 = (evt.getPosition()[0], 0.25*self.dpi)
+##            self.linePos2 = (evt.getPosition()[0], -0.25*self.dpi)
+##            gap = (self.dpi / (6, 4, 2) [self.appData['flowSize']])/2
+##            dLoopToBaseLine = (15/2, 25/2, 43/2) [self.appData['flowSize']]
+##            dBetweenLoops = (20, 24, 30) [self.appData['flowSize']]
+            
         #guess virtual size; nRoutines wide by nLoops high
         #make bigger than needed and shrink later
         nRoutines = len(expFlow)
@@ -899,6 +913,7 @@ class FlowPanel(wx.ScrolledWindow):
         maxNestLevel=0
         self.gapMidPoints=[currX-gap/2]
         self.gapNestLevels=[0]
+
         for ii, entry in enumerate(expFlow):
             if entry.getType()=='LoopInitiator':
                 self.loops[entry.loop]={'init':currX,'nest':nestLevel, 'id':ii}#NB the loop is itself the dict key!?
@@ -918,6 +933,23 @@ class FlowPanel(wx.ScrolledWindow):
             currX+=gap
         lineRect = wx.Rect(self.linePos[0]-2, self.linePos[1]-2, currX-self.linePos[0]+2, 4)
         pdc.SetIdBounds(lineId,lineRect)
+
+##Irina's Code
+##for ii, entry in enumerate(expFlow):
+##            if entry.getType()=='LoopInitiator':
+##                self.loops[entry.loop]={'init':currX,'nest':nestLevel, 'id':ii}#NB the loop is itself the dict key!?
+##                nestLevel+=1#start of loop so increment level of nesting
+##                maxNestLevel = max(nestLevel, maxNestLevel)
+##            elif entry.getType()=='LoopTerminator':
+##                self.loops[entry.loop]['term']=currX #NB the loop is itself the dict key!
+##                nestLevel-=1#end of loop so decrement level of nesting
+##            elif entry.getType()=='Routine':
+##                # just get currX based on text size, don't draw anything yet:
+##                currX = self.drawFlowRoutine(pdc,entry, id=ii,pos=[currX,self.linePos[1]-10], draw=False)
+##                if entry.splitFlow: #IR TODO: Make sure that it can be accessed like this <-------------------------------------------------
+##                    pdc.DrawLine(x1=self.linePos[0]-gap, y1=self.linePos[1],x2=self.linePos[0],y2=self.linePos[1])
+##                    pdc.DrawLine(x1=self.linePos1[0]-gap, y1=self.linePos1[1],x2=self.linePos1[0],y2=self.linePos1[1])
+##                    pdc.DrawLine(x1=self.linePos2[0]-gap, y1=self.linePos2[1],x2=self.linePos2[0],y2=self.linePos2[1])
 
         # draw the loops first:
         maxHeight = 0
