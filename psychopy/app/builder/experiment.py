@@ -1075,21 +1075,22 @@ class Flow(list):
         #run-time code
         for entry in self:
             self._currentRoutine=entry
-            entry.writeMainCode(script)
-##        for entry in self:
-##            if entry.getType() = ForkInitiator:
-##		script.writeIndented(if event.getKeys() = params['input1'].val:)
-##		write(	entry.routine1.--writemaincode--)
-##		write(if event.getKeys() = params[input2'].val:)
-##		write(	entry.routine2.--writemaincode--)
-##                write(else
-##            else:	
-##		self._currentRoutine=entry
-##            	entry.writeMainCode(script)
-##        #tear-down code (very few components need this)
-##        for entry in self:
-##            self._currentRoutine=entry
-##            entry.writeExperimentEndCode(script)
+            if entry.getType() = ForkInitiator:
+		script.writeIndented("if event.getKeys() == params['input1'].val:")
+                script.setIndentLevel(1, relative=True)
+                entry.routine1.writeMainCode(script)
+		script.writeIndented("elif event.getKeys() = params[input2'].val:")
+                script.setIndentLevel(1, relative=True)
+		entry.routine2.writeMainCode(script)
+                script.writeIndented("else:")
+                script.writeIndented("  pass")
+            else: 
+            	entry.writeMainCode(script)
+        #tear-down code (very few components need this)
+
+        for entry in self:
+            self._currentRoutine=entry
+            entry.writeExperimentEndCode(script)
 
 class Routine(list):
     """
@@ -1553,4 +1554,5 @@ def getCodeFromParamStr(val):
     """
     tmp = re.sub(r"^(\$)+", '', val)  # remove leading $, if any
     tmp2 = re.sub(r"([^\\])(\$)+", r"\1", tmp)  # remove all nonescaped $, squash $$$$$
-    return re.sub(r"[\\]\$", '$', tmp2)  # remove \ from all \$
+    return re.sub(r"[\\]\$", '$', tmp2)  # remove \ from all \$  
+      
